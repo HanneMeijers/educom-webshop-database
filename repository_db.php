@@ -19,54 +19,30 @@ function closeDatabase ($conn) {
     mysqli_close($conn); 
 }
 
-function doQuery () {
-$sql = "INSERT INTO users (id, naam, e-mailadres, wachtwoord);
-VALUES ('[value-1]','[value-2]','[value-3]','[value-4]')";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if (mysqli_query($conn, $sql)) {
-  echo "New record created successfully";
-} else {
-  echo "Error: kan gegevens niet toevoegen" . $sql . "<br>" . mysqli_error($conn);
-}
-
-mysqli_close($conn); 
-
-
-
-
-
-function selectUsers ()
-$sql = "SELECT id, naam, e-mailadres, wachtwoord  FROM users";
+function findUser () {
+$sql = "SELECT id, naam, e-mailadres, wachtwoord FROM users"; 
 $result = mysqli_query($conn, $sql);
 
 if (mysqli_num_rows($result) > 0) {
   // output data of each row
   while($row = mysqli_fetch_assoc($result)) {
-    echo "id: " . $row["id"]. "Naam: " . $row["naam"]. "E-mailadres " . $row["e-mailadres"]. "Wachtwoord " . $row["wachtwoord"]."<br>";
+    echo "id: " . $row["id"]. "name: " . $row["naam"]. "e-mail: " . $row["e-mailadres"]. "password: " . $row["wachtwoord"]. "<br>";
   }
 } else {
   echo "0 results";
 }
+}
 
+function saveUser () {
+$sql = "INSERT INTO users (naam, e-mailadres , wachtwoord)
+VALUES ('$name', '$email', '$password')";
 
+if (mysqli_query($conn, $sql)) {
+  echo "Registratie voltooid";
+} else {
+  echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+}
+}
+
+mysqli_close($conn);
 ?>
