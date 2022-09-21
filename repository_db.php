@@ -19,12 +19,28 @@ function closeDatabase ($conn) {
     mysqli_close($conn); 
 }
 
-
-
-
-function insertUsers () {
+function doQuery () {
 $sql = "INSERT INTO users (id, naam, e-mailadres, wachtwoord);
 VALUES ('[value-1]','[value-2]','[value-3]','[value-4]')";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if (mysqli_query($conn, $sql)) {
