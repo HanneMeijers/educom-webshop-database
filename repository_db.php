@@ -13,8 +13,13 @@ function connectToDatabase () {
 
 function checkConnection ($conn) {
 if (!$conn) {
-  die("Connection to server failed" . mysqli_connect_error());
+  throw new Exception("connection with database has failed" . mysqli_connect_error());
 }
+}
+function checkResult ($conn, $result, $sql) {
+    if ($result === false) {
+        throw new Exception("query failed. sql: ". $sql. " Error: ". mysqli_error($conn));
+    }
 }
 
 function closeDatabase ($conn) {
@@ -24,27 +29,33 @@ function closeDatabase ($conn) {
 function findUserByEmail ($email) {
     $userArray = null;
     $conn = connectToDatabase();
-    $sql = "SELECT id, name, email, password FROM users WHERE email = '$email'"; 
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) > 0) {
-        // output data of each row
-        $userArray = mysqli_fetch_assoc($result);
-    } 
-    closeDatabase($conn);
-    return $userArray;
+    try {
+        $sql = "SELECT id, name, email, password FROM users WHERE email = '$email'"; 
+        $result = mysqli_query($conn, $sql);
+        checkResult($conn, $result, $sql);
+    
+        if (mysqli_num_rows($result) > 0) {
+            // output data of each row
+            $userArray = mysqli_fetch_assoc($result);
+        } 
+        return $userArray;
+    }
+    finally {
+        closeDatabase($conn);
+    }
 }
 
 function saveUser ($email, $name, $password) {
     $conn = connectToDatabase();
-    $sql = "INSERT INTO users (name, email , password)
-            VALUES ('$name', '$email', '$password')";
+    try {
+        $sql = "INSERT INTO users (name, email , password)
+                    VALUES ('$name', '$email', '$password')";
 
-    if (mysqli_query($conn, $sql)) {
-        echo "Registratie voltooid";
-    } else {
-        echo "Error: e-mailadres al in gebruik" . $sql . "<br>" . mysqli_error($conn);
+        $result = mysqli_query($conn, $sql);
+        checkResult($conn, $result, $sql);
     }
-    closeDatabase($conn);
+    finally {
+        closeDatabase($conn);
+    }
 }
 ?>

@@ -8,7 +8,8 @@ function validateLogin () {
     // define variables and set to empty values
     $name = $email = $password = "";
     $emailErr = $passwordErr = "";
-    $valid = false;
+    $genericErr = "";
+        $valid = false;
     
       // validate the 'Post' data //
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -29,17 +30,24 @@ function validateLogin () {
         if (empty($emailErr) && empty($passwordErr)) {
             require_once ("service.php");
             
-            $userArray = authenticateUser($email, $password);
-            if (empty($userArray)) {
-                $emailErr = "Geen geldig e-mailadres of password onjuist";
-            } else {
+            try {
+                $userArray = authenticateUser($email, $password);
+                if (empty($userArray)) {
+                $genericErr = "Geen geldig e-mailadres of password onjuist";
+                } else {
                 $valid = true;
                 $name = $userArray["name"];
+                }
             }
+            catch (Exception $exception) {
+                $genericErr = "technische fout: u kan op dit moment niet inloggen";
+                logToServer("registration failed " . $exception->getMessage());
+            }
+                
         }
     }
         return Array ("name" => $name, "email" => $email, "password" => $password,
-                      "emailErr" => $emailErr, "passwordErr" => $passwordErr, "valid" => $valid);
+                      "emailErr" => $emailErr, "passwordErr" => $passwordErr, "valid" => $valid, "genericErr" => $genericErr);
 }
 function showLoginForm($data) {
     echo '

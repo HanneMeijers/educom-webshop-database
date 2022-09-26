@@ -30,8 +30,11 @@ function validateRegister () {
             // $name = $_POST["name"];
             $name = cleanupInputFromUser($_POST["name"]);
             if (!preg_match("/^[a-zA-Z-' ]*$/",$name)) {
-                $nameErr = "Only letters and white space allowed";
+                $nameErr = "Alleen letters en witregels toegestaan";
             }
+            elseif (strlen($name)>50) {
+                $nameErr = "Naam moet minder dan 50 karakters zijn";
+            } 
         }
 
         if (empty($_POST["email"])) {
@@ -41,11 +44,17 @@ function validateRegister () {
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $emailErr = "ongeldig email format";
             }
+            elseif (strlen($email)>50) {
+                $emailErr = "email moet minder dan 50 karakters zijn";
+            }
         }
         if (empty($_POST["password"])) {
             $passwordErr = "Vul wachtwoord in";
         } else {
             $password = cleanupInputFromUser($_POST["password"]);
+            if (strlen($password)>40) {
+                $passwordErr = "Wachtwoord moet minder dan 40 karakters zijn";
+            }
         }    
         
         if (empty($_POST["passwordCheck"])) {
@@ -55,11 +64,16 @@ function validateRegister () {
         } 
 
         if (empty($nameErr) && empty($emailErr) && empty($passwordErr) && empty($passwordCheckErr)) {
-            if (doesUserExist($email)) {
-                $emailErr = "e-mailadres is al in gebruik, ga naar login";
-            } else{
-                $valid = true;
-            }
+            try {
+                if (doesUserExist($email)) {
+                  $emailErr = "e-mailadres is al in gebruik, ga naar login";
+                  } else{
+                  $valid = true;
+                  }
+                } catch (Exception $exception) {
+                    $emailErr = "technische fout: kan u op dit moment niet registreren";
+                    logToServer("registration failed " . $exception->getMessage());
+                }
         }
        
     }

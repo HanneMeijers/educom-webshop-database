@@ -108,6 +108,7 @@ function showBodySection($data)
    echo '    <body>' . PHP_EOL; 
    showHeader($data['page']);
    showMenu(); 
+   showGenericErr($data); 
    showContent($data); 
    showFooter(); 
    echo '    </body>' . PHP_EOL; 
@@ -168,7 +169,11 @@ function showMenu ()
     }
     echo '</ul>' ;
 }
-  
+function showGenericErr($data) {
+    if (isset($data ["genericErr"])) {
+        echo '<div class="error">'. $data ["genericErr"] ."</div>";
+    }
+}
   function show404Header ()
   {
     echo 'Page not found';
@@ -235,4 +240,8 @@ function cleanupInputFromUser($data) {;
   $data = stripslashes($data);
   $data = htmlspecialchars($data);
   return $data;
+}
+
+function logToServer ($message) {
+    echo 'Logging to server' . $message;
 }
