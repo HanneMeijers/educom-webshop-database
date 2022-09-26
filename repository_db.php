@@ -58,4 +58,45 @@ function saveUser ($email, $name, $password) {
         closeDatabase($conn);
     }
 }
+
+function getAllProducts () {
+    $productsArray = Array ();
+    $conn = connectToDatabase();
+    try {
+        $sql = "SELECT id, name, img_url, price_per_one FROM products"; 
+        $result = mysqli_query($conn, $sql);
+        checkResult($conn, $result, $sql);
+        if (mysqli_num_rows($result) > 0) {
+            // output data of each row
+            while($row = mysqli_fetch_assoc($result)) {
+                $id = $row['id'];
+                $productsArray [$id] = $row;
+            }
+        }
+        return $productsArray;
+    }    
+    finally {
+        closeDatabase($conn);
+    }
+}
+
+function getProductById ($productId) {
+    $productArray = null;
+    $conn = connectToDatabase();
+    try {
+        $sql = "SELECT * FROM products WHERE id = '$productId'"; 
+        $result = mysqli_query($conn, $sql);
+        checkResult($conn, $result, $sql);
+    
+        if (mysqli_num_rows($result) > 0) {
+            // output data of each row
+            $productArray = mysqli_fetch_assoc($result);
+        } 
+        return $productArray;
+    }
+    finally {
+        closeDatabase($conn);
+    }
+}
+
 ?>

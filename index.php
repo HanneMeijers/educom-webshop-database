@@ -3,7 +3,7 @@ require_once("session_manager.php");
 //Main applicatie
 $page = getRequestedPage();
 $data = processRequest($page);
-//var_dump($data);
+var_dump($data);
 showResponsePage($data);
 
 function getRequestedPage () {
@@ -77,6 +77,11 @@ function processRequest($page) {
             $page='login';
         }
         break;
+
+    case 'webshop':
+        require_once 'webshop.php';
+        $data = getWebshopData();
+        break;
     }
     $data['page']= $page;
     return $data;
@@ -128,6 +133,10 @@ function showHeader($page)
           require_once('home.php');
           showHomeHeader();
           break;
+       case 'webshop';
+       require_once('webshop.php');
+          showWebshopHeader();
+          break;
        case 'about':
           require_once('about.php');
           showAboutHeader();
@@ -160,7 +169,9 @@ function showMenu ()
    echo '<ul class="navigation">
     <li><a HREF="index.php?page=home">Home</a></li>
     <li><a HREF="index.php?page=about">Over mij</a></li>
-    <li><a HREF="index.php?page=contact">Contact</a></li>';
+    <li><a HREF="index.php?page=contact">Contact</a></li>
+    <li><a HREF="index.php?page=webshop">Wijnwinkel</a></li>';
+
     if (isUserLoggedIn()) {
         echo '<li><a HREF="index.php?page=logout">Loguit ' . getLoggedInUsername() . '</a></li>';
     } else {
@@ -199,6 +210,11 @@ function showContent($data) {
        case 'register':
            require_once('register.php');
            showRegisterForm ($data);
+           break;
+
+       case 'webshop';
+       require_once('webshop.php');
+           showWebshopForm($data);
            break;
            
        case 'login':
