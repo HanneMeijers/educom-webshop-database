@@ -34,7 +34,7 @@ footer{
   font-size: 10px;
   /* Next 4 lines: align bottom-right */
   position: absolute;
-  bottom: 10px;
+ /* bottom: 10px; */
   right: 0px;
   width: 150px; 
 }
@@ -60,4 +60,14 @@ ul.navigation li > a {
 
 .error {
 color:red;
+}
+
+.webshop-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+}
+
+.center {
+  margin: auto;
+  text-align: center;
 }

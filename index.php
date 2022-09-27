@@ -214,7 +214,7 @@ function showContent($data) {
 
        case 'webshop';
        require_once('webshop.php');
-           showWebshopForm($data);
+           showWebshopContent($data);
            break;
            
        case 'login':
