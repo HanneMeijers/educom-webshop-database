@@ -157,6 +157,10 @@ function showHeader($page)
        case 'logout':
         require_once('home.php');
           break;
+       case 'webshop_details_page.php':
+        require_once('webshop_details_page.php');
+          showWebshopDetailsPageHeader();
+          break;    
        default:
           show404Header();
           break;           
@@ -217,6 +221,11 @@ function showContent($data) {
            showWebshopContent($data);
            break;
            
+       case 'webshop_details_page.php';
+       require_once('webshop_details_page.php');
+           showWebshopDetailsContent($data);
+               break;
+
        case 'login':
            require_once('login.php');
            showLoginForm ($data);
