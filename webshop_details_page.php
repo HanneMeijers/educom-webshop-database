@@ -2,28 +2,41 @@
 require_once "repository_db.php";
 require_once "webshop.php";
 
-function showWebshopDetailsPageHeader() {
-    echo '$product['name']';
+function getWebshopDetailData () {
+    $product = NULL;
+    $genericErr = '';
+    $productId = getUrlVariabele('id');
+    try {
+        $product = getProductById ($productId); 
+    }
+    catch (Exception $exception) {
+        $genericErr = "Sorry, door een technische fout is de web shop niet bereikbaar";
+        logToServer("get webshop data failed " . $exception->getMessage());
+    }
+    return array('product' => $product, 'genericErr' => $genericErr);
+}
+
+
+function showWebshopDetailsPageHeader($data) {
+    if (isset($data['product']['name'])) {
+        $product = $data['product'];
+        echo $product['name'];
+    } else {
+        echo 'Detail pagina';
+    }
 }
 
 function showWebshopDetailsContent ($data) {
-    $data = $data['products'];
-    echo '<div class="webshop-container">'
-    foreach ($product as $product) {
-        showDetailsWebshopProduct($product);
-    } 
-    echo '</div>';
-
+    $product = $data['product'];
+    showDetailsWebshopProduct($product);
 }
 
 function showDetailsWebshopProduct($product) {
     echo '<div class="webshop-item">';
-    echo '<a href="index.php?page=detail&id=' . $product['id'] .'">';
     echo '<div class="center"><img src="Images/' . $product['img_url'] .'" alt="' . $product['name'] . '" height="400px" ></div>' ;
     echo '<div class="center">Naam: ' . $product['name'] . '</div>';
     echo '<div class="center">Beschrijving: ' . $product['description'] . '</div>';
     echo '<div class="center">Prijs: ' . $product['price_per_one'] . '</div>';
-    echo '</a>';
     echo '</div>';
 }
 ?>

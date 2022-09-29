@@ -1,6 +1,6 @@
 <?php
 function connectToDatabase () {
-    $servername = "localhost";
+    $servername = "127.0.0.1"; // ip adres van de "localhost";
     $username = "WebShopUser";
     $password = "Eemnes11!";
     $dbname = "webshop_hanne";
@@ -29,11 +29,9 @@ function closeDatabase ($conn) {
 function findUserByEmail ($email) {
     $userArray = null;
     $conn = connectToDatabase();
-    $id = mysqli_real_escape_string($conn, $id);
-    $name = mysqli_real_escape_string($conn, $name);
-    $email = mysqli_real_escape_string($conn, $email);
-    $password = mysqli_real_escape_string($conn, $password);
     try {
+        $email = mysqli_real_escape_string($conn, $email);
+        
         $sql = "SELECT id, name, email, password FROM users WHERE email = '$email'"; 
         $result = mysqli_query($conn, $sql);
         checkResult($conn, $result, $sql);
@@ -51,10 +49,11 @@ function findUserByEmail ($email) {
 
 function saveUser ($email, $name, $password) {
     $conn = connectToDatabase();
-    $name = mysqli_real_escape_string($conn, $name);
-    $email = mysqli_real_escape_string($conn, $email);
-    $password = mysqli_real_escape_string($conn, $password);
     try {
+        $name = mysqli_real_escape_string($conn, $name);
+        $email = mysqli_real_escape_string($conn, $email);
+        $password = mysqli_real_escape_string($conn, $password);
+
         $sql = "INSERT INTO users (name, email , password)
                     VALUES ('$name', '$email', '$password')";
 

@@ -82,11 +82,17 @@ function processRequest($page) {
         require_once 'webshop.php';
         $data = getWebshopData();
         break;
+    
+    
+    case 'detail';
+        require_once 'webshop_details_page.php';
+        $data = getWebshopDetailData();
+        break;
     }
+
     $data['page']= $page;
     return $data;
 }
-    
 
 function showResponsePage($data) {
    beginDocument(); 
@@ -111,7 +117,7 @@ function showHeadSection()
 function showBodySection($data) 
 { 
    echo '    <body>' . PHP_EOL; 
-   showHeader($data['page']);
+   showHeader($data);
    showMenu(); 
    showGenericErr($data); 
    showContent($data); 
@@ -124,10 +130,10 @@ function endDocument()
    echo  '</html>'; 
 } 
 
-function showHeader($page) 
+function showHeader($data) 
 { 
     echo '<h1 class="title">';
-    switch ($page) 
+    switch ($data['page']) 
    { 
        case 'home':
           require_once('home.php');
@@ -157,9 +163,9 @@ function showHeader($page)
        case 'logout':
         require_once('home.php');
           break;
-       case 'webshop_details_page.php':
+       case 'detail':
         require_once('webshop_details_page.php');
-          showWebshopDetailsPageHeader();
+          showWebshopDetailsPageHeader($data);
           break;    
        default:
           show404Header();
@@ -221,7 +227,7 @@ function showContent($data) {
            showWebshopContent($data);
            break;
            
-       case 'webshop_details_page.php';
+       case 'detail';
        require_once('webshop_details_page.php');
            showWebshopDetailsContent($data);
                break;
