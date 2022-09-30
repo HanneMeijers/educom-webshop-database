@@ -37,6 +37,7 @@ function showDetailsWebshopProduct($product) {
     echo '<div class="center">Naam: ' . $product['name'] . '</div>';
     echo '<div class="center">Beschrijving: ' . $product['description'] . '</div>';
     echo '<div class="center">Prijs: ' . $product['price_per_one'] . '</div>';
+    showAddToCardButton($product['id'] ); 
     echo '</div>';
 }
 ?>

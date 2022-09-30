@@ -82,6 +82,12 @@ function processRequest($page) {
         require_once 'webshop.php';
         $data = getWebshopData();
         break;
+
+    case 'cart':
+        require_once 'shoppingcart.php';
+        handleShoppingCartActions ();
+        $data = getShoppingCartData();
+        break;  
     
     
     case 'detail';
@@ -138,6 +144,10 @@ function showHeader($data)
        case 'home':
           require_once('home.php');
           showHomeHeader();
+          break;
+       case 'cart':
+          require_once('shoppingcart.php');
+          showShoppingCartHeader();
           break;
        case 'webshop';
        require_once('webshop.php');
@@ -231,7 +241,12 @@ function showContent($data) {
        require_once('webshop_details_page.php');
            showWebshopDetailsContent($data);
                break;
-
+       
+       case 'cart':
+       require_once('shoppingcart.php');
+       showShoppingCartContent($data);
+           break;
+     
        case 'login':
            require_once('login.php');
            showLoginForm ($data);
@@ -276,3 +291,15 @@ function cleanupInputFromUser($data) {;
 function logToServer ($message) {
     echo 'Logging to server' . $message;
 }
+
+function showAddToCardButton ($productid) {
+   if (isUserLoggedIn()) {
+    echo '    <form method="post" action="index.php" >   
+   <input type="hidden" name="page" value="shoppingcart"> 
+   <input type="hidden" name="productid" value="'. $productid . '">
+   <input type="hidden" name="action" value="addtocart"> 
+   <button>Add to Cart</button></p>
+   </form> ';
+    }
+    }
+    
