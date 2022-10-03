@@ -42,11 +42,24 @@ function showShoppingCartHeader () {
 
 function showShoppingCartContent($data) {
     $shoppingCartRows = $data['shoppingCartRows'];
-    echo ''; /* hier moet de start van de tabel + de headers tabel */
+    echo '<div class="table-responsive">
+    <table class="table-bordered">
+        <tr class="table-headers">
+            <th>Product</th>
+            <th>Aantal</th>
+            <th>Prijs</th>
+            <th>Subtotal</th>
+            <th>Totaal</th>
+            <th>Verwijder</th> 
+            /* verwijder moet button worden, geen table titel */
+        </tr>';
     foreach ($shoppingCartRows as $shoppingCartRow) {
         showShoppingCartRow ($shoppingCartRow);
     }
-    echo ''; /*hier einde vd tavbel */
+      
+    echo '   </tr>
+    </table>
+    </div>'; 
 
 }
 
@@ -54,6 +67,10 @@ function showShoppingCartRow($shoppingCartRow) {
     echo '<tr>';
     echo '<td>'. $shoppingCartRow['product_name']. '</td>';
     echo '<td>'. $shoppingCartRow['quantity']. '</td>';
+    echo '<td>'. $shoppingCartRow['price']. '</td>';
+    echo '<td>'. $shoppingCartRow['subtotal']. '</td>';
+    echo '<td>'. $shoppingCartRow['total_price']. '</td>';
+    echo '</tr>';
     
     /*maak hier 1 rij vd tabel met de data uit shoppingCartRow*/
 }
