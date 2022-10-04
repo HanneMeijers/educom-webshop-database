@@ -73,3 +73,21 @@ color:red;
   margin: auto;
   text-align: center;
 }
+
+table {
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+  vertical-align: middle;
+}
+
+td span {
+  vertical-align: middle;
+}
+
+.float: left
+ /* with some space to the left of the second form */
+ margin-right: 20px;

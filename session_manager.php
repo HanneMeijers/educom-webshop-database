@@ -1,8 +1,9 @@
 <?php
 session_start();
 
-function dologinUser($name) {
+function dologinUser($name, $userId) {
     $_SESSION['loggedInName'] = $name;
+    $_SESSION['loggedInUserId'] = $userId;
     $_SESSION['shoppingCart'] = array (); /* we doen productid => hoeveelheid (quantity) */
 }
 
@@ -11,6 +12,10 @@ function isUserLoggedIn() {
 }
 function getLoggedInUsername() {
     return $_SESSION["loggedInName"];
+}
+
+function getLoggedInUserId () {
+    return $_SESSION["loggedInUserId"];
 }
 
 function doLogoutUser() {
@@ -25,7 +30,20 @@ function addProductToShoppingCart($productid) {
         $_SESSION['shoppingCart'][$productid] = 1;
     }
 }
+function decreaseProductFromShoppingCart ($productid) {
+    if (array_key_exists($productid, $_SESSION['shoppingCart'])) {
+        $_SESSION['shoppingCart'][$productid] -=1;
+    }
+    if ($_SESSION['shoppingCart'][$productid] < 1) { 
+        removeProductFromShoppingCart($productid);
+    }
+}
 
-function getShoppingCartData () {
+function getShoppingCart() {
     return $_SESSION['shoppingCart'];
+}
+function removeProductFromShoppingCart($productid) {
+    if (array_key_exists($productid, $_SESSION['shoppingCart'])) {
+        unset($_SESSION['shoppingCart'][$productid]);
+    }
 }

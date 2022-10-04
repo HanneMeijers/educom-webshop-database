@@ -105,4 +105,37 @@ function getProductById ($productId) {
     }
 }
 
-?>
+function storeOrder ($userId, $shoppingCartRows) {
+    $conn = connectToDatabase();
+    try {
+        // insert met invoice number 2022000000
+        $invoiceNumber = date("Y")."000000";
+        $sql = "INSERT INTO invoice (invoice_number, user_id, `date`
+                             VALUES ($invoiceNumber, $userId, CURDATE())";
+        $result = mysqli_query($conn, $sql);
+        checkResult($conn, $result, $sql);
+        $invoiceId = mysqli_insert_id($conn);
+        
+        // zoek grootste invoice number
+        $sql="SELECT MAX(invoice_number) FROM `invoice`";
+        $result = mysqli_query($conn, $sql);
+        checkResult($conn, $result, $sql);
+        $maxInvoiceNumber = mysqli_fetch_row($result)[0];
+        
+        // update ons record met max invoice number + 1
+        $sql = "UPDATE invoice SET invoice_number = ".($maxInvoiceNumber + 1)." WHERE id = $invoiceId";
+        $result = mysqli_query($conn, $sql);
+        checkResult($conn, $result, $sql);
+        
+        foreach ($shoppingCartRows as $shoppingCartRow) {
+           $sql = "INSERT INTO invoice_line (product_id, invoice_id, sale_price) 
+                        VALUES ('".$shoppingCartRow['product_id']."','".$invoiceId."', '".$shoppingCartRow['price_per_one']."')";
+            $result = mysqli_query($conn, $sql);
+            checkResult($conn, $result, $sql);
+        }
+}
+
+finally {
+    closeDatabase($conn);
+}
+}

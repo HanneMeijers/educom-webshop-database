@@ -7,7 +7,7 @@ function getWebshopData () {
     $products = getAllProducts (); 
     }
     catch (Exception $exception) {
-        $genericErr = "Sorry, door een technische fout is de web shop niet bereikbaar";
+        $genericErr = "Sorry, door een technische fout is de webshop niet bereikbaar";
         logToServer("get webshop data failed " . $exception->getMessage());
     }
     return array('products' => $products, 'genericErr' => $genericErr);
@@ -33,7 +33,7 @@ function showWebshopProduct($product) {
     echo '<div class="center">Naam: ' . $product['name'] . '</div>';
     echo '<div class="center">Prijs: ' . $product['price_per_one'] . '</div>';
     echo '</a>';
-    showAddToCardButton($product['id'] ); 
+    showActionForm("addtocart", "Toevoegen", $product [ 'id' ]);
     echo '</div>';
 }
 

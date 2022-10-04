@@ -51,7 +51,7 @@ function processRequest($page) {
         require_once 'login.php';
         $data=validateLogin();
         if ($data ["valid"]) {
-            doLoginUser($data['name']);
+            doLoginUser($data['name'], $data['userid']);
             $page='home';
         }
         break;
@@ -191,8 +191,10 @@ function showMenu ()
     <li><a HREF="index.php?page=about">Over mij</a></li>
     <li><a HREF="index.php?page=contact">Contact</a></li>
     <li><a HREF="index.php?page=webshop">Wijnwinkel</a></li>';
+    
 
     if (isUserLoggedIn()) {
+        echo ' <li><a HREF="index.php?page=cart">Winkelwagen</a></li>';
         echo '<li><a HREF="index.php?page=logout">Loguit ' . getLoggedInUsername() . '</a></li>';
     } else {
         echo '<li><a HREF="index.php?page=login">Login</a></li>;
@@ -292,14 +294,15 @@ function logToServer ($message) {
     echo 'Logging to server' . $message;
 }
 
-function showAddToCardButton ($productid) {
+function showActionForm ($action, $buttontext, $productid= null) {
    if (isUserLoggedIn()) {
     echo '    <form method="post" action="index.php" >   
-   <input type="hidden" name="page" value="shoppingcart"> 
+   <input type="hidden" name="page" value="cart"> 
    <input type="hidden" name="productid" value="'. $productid . '">
-   <input type="hidden" name="action" value="addtocart"> 
-   <button>Add to Cart</button></p>
+   <input type="hidden" name="action" value="'. $action .'"> 
+   <button>' . $buttontext. '</button>
    </form> ';
     }
     }
-    
+   
+

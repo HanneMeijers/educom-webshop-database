@@ -9,6 +9,7 @@ function validateLogin () {
     $name = $email = $password = "";
     $emailErr = $passwordErr = "";
     $genericErr = "";
+    $userId = 0;
         $valid = false;
     
       // validate the 'Post' data //
@@ -37,6 +38,7 @@ function validateLogin () {
                 } else {
                 $valid = true;
                 $name = $userArray["name"];
+                $userId = $userArray["id"];
                 }
             }
             catch (Exception $exception) {
@@ -46,7 +48,7 @@ function validateLogin () {
                 
         }
     }
-        return Array ("name" => $name, "email" => $email, "password" => $password,
+        return Array ("userId" => $userId, "name" => $name, "email" => $email, "password" => $password,
                       "emailErr" => $emailErr, "passwordErr" => $passwordErr, "valid" => $valid, "genericErr" => $genericErr);
 }
 function showLoginForm($data) {

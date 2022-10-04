@@ -1,10 +1,25 @@
 <?php
+require_once ("repository_db.php");
 function handleShoppingCartActions () {
     $action = getPostDataVariabele("action");
     switch ($action) {
         case "addtocart":
+        case "increaseQuantity":
             $productid = getPostDataVariabele("productid");
             addProductToShoppingCart($productid);
+            break;
+        case "decreaseQuantity":
+            $productid = getPostDataVariabele("productid");
+            decreaseProductFromShoppingCart($productid);
+            break;
+        case "removefromcart":
+            $productid = getPostDataVariabele("productid");
+            removeProductFromShoppingCart($productid);
+            break;
+        case "order":
+            $userid = getLoggedInUserId ();
+            $data = getShoppingCartData();
+            storeOrder ($userid, $data["shoppingCartRows"]);
             break;
     }
 }
@@ -15,16 +30,17 @@ function getShoppingCartData() {
     $total = 0;
     try {
         $products = getAllProducts (); 
-        foreach ( getShoppingCartData () as $productid => $quantity) {
+        foreach ( getShoppingCart () as $productid => $quantity) {
             if (!array_key_exists($productid, $products)) {
               continue;  
             }
             $product = $products[$productid];
             $shoppingCartRow = array ('productid' => $productid, 'quantity' => $quantity, 'name' => $product['name'],
-                                      'price_per_one' => $product['price_per_one'], 'image_url' => $product['image_url']);
+                                      'price_per_one' => $product['price_per_one'], 'img_url' => $product['img_url']);
             $subtotal = $quantity * $product['price_per_one'];
             $shoppingCartRow['subtotal'] = $subtotal;
             $total += $subtotal;
+            $shoppingCartRow['running_total'] = $total;
             array_push ($shoppingCartRows, $shoppingCartRow);
         }
     }
@@ -43,36 +59,42 @@ function showShoppingCartHeader () {
 function showShoppingCartContent($data) {
     $shoppingCartRows = $data['shoppingCartRows'];
     echo '<div class="table-responsive">
+    <div style="overflow-x: auto;">
     <table class="table-bordered">
         <tr class="table-headers">
             <th>Product</th>
             <th>Aantal</th>
             <th>Prijs</th>
-            <th>Subtotal</th>
+            <th>Subtotaal</th>
             <th>Totaal</th>
-            <th>Verwijder</th> 
-            /* verwijder moet button worden, geen table titel */
         </tr>';
     foreach ($shoppingCartRows as $shoppingCartRow) {
         showShoppingCartRow ($shoppingCartRow);
     }
       
-    echo '   </tr>
+    echo '  
     </table>
+    </div>
     </div>'; 
-
+    showActionForm("order", "Bestellen");
 }
 
 function showShoppingCartRow($shoppingCartRow) { 
     echo '<tr>';
-    echo '<td>'. $shoppingCartRow['product_name']. '</td>';
-    echo '<td>'. $shoppingCartRow['quantity']. '</td>';
-    echo '<td>'. $shoppingCartRow['price']. '</td>';
-    echo '<td>'. $shoppingCartRow['subtotal']. '</td>';
-    echo '<td>'. $shoppingCartRow['total_price']. '</td>';
+    echo '<td><img src="Images/' . $shoppingCartRow['img_url'] .'" alt="' . $shoppingCartRow['name'] . '" height="100px" >';
+    echo '<span>'.  $shoppingCartRow['name']. '</span></td>';
+    echo '<td>'; 
+    showActionForm("decreaseQuantity", "-", $shoppingCartRow['productid']);
+    echo $shoppingCartRow['quantity']; 
+    showActionForm("increaseQuantity", "+", $shoppingCartRow['productid']);
+    echo '</td>';
+    echo '<td>'. number_format ($shoppingCartRow['price_per_one'], 2,','). '</td>';
+    echo '<td>'. number_format ($shoppingCartRow['subtotal'], 2,','). '</td>';
+    echo '<td>'. number_format ($shoppingCartRow['running_total'], 2,','). '</td>';
+    echo '<td>';
+    showActionForm("removefromcard", "Verwijderen", $shoppingCartRow [ 'productid' ]);
+    echo '</td>';
     echo '</tr>';
-    
-    /*maak hier 1 rij vd tabel met de data uit shoppingCartRow*/
 }
 
 
