@@ -19,9 +19,12 @@ function handleShoppingCartActions () {
         case "order":
             $userid = getLoggedInUserId ();
             $data = getShoppingCartData();
-            storeOrder ($userid, $data["shoppingCartRows"]);
+            $data = storeOrder ($userid, $data["shoppingCartRows"]);
+            emptyShoppingCart();
+            $data['ordered'] = true;
             break;
     }
+    return $data;
 }
 
 function getShoppingCartData() {
@@ -88,9 +91,9 @@ function showShoppingCartRow($shoppingCartRow) {
     echo $shoppingCartRow['quantity']; 
     showActionForm("increaseQuantity", "+", $shoppingCartRow['productid']);
     echo '</td>';
-    echo '<td>'. number_format ($shoppingCartRow['price_per_one'], 2,','). '</td>';
-    echo '<td>'. number_format ($shoppingCartRow['subtotal'], 2,','). '</td>';
-    echo '<td>'. number_format ($shoppingCartRow['running_total'], 2,','). '</td>';
+    echo '<td> &euro;&nbsp;'. number_format ($shoppingCartRow['price_per_one'], 2,',','.'). '</td>';
+    echo '<td> &euro;&nbsp;'. number_format ($shoppingCartRow['subtotal'], 2,',','.'). '</td>';
+    echo '<td> &euro;&nbsp;'. number_format ($shoppingCartRow['running_total'], 2,',','.'). '</td>';
     echo '<td>';
     showActionForm("removefromcard", "Verwijderen", $shoppingCartRow [ 'productid' ]);
     echo '</td>';

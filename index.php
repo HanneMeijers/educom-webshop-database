@@ -51,7 +51,7 @@ function processRequest($page) {
         require_once 'login.php';
         $data=validateLogin();
         if ($data ["valid"]) {
-            doLoginUser($data['name'], $data['userid']);
+            doLoginUser($data['name'], $data['userId']);
             $page='home';
         }
         break;
@@ -85,10 +85,13 @@ function processRequest($page) {
 
     case 'cart':
         require_once 'shoppingcart.php';
-        handleShoppingCartActions ();
-        $data = getShoppingCartData();
+        $data = handleShoppingCartActions ();
+        if (isset($data['ordered'])) {
+            $page = 'orderconformation';
+        } else {
+            $data = getShoppingCartData();
+        }
         break;  
-    
     
     case 'detail';
         require_once 'webshop_details_page.php';
@@ -171,12 +174,16 @@ function showHeader($data)
           showLoginHeader();
           break;
        case 'logout':
-        require_once('home.php');
+          require_once('home.php');
           break;
        case 'detail':
-        require_once('webshop_details_page.php');
+          require_once('webshop_details_page.php');
           showWebshopDetailsPageHeader($data);
-          break;    
+          break;
+       case 'orderconformation':
+          require_once('order_conformation.php');
+          showOrderconformationHeader();
+          break;
        default:
           show404Header();
           break;           
@@ -256,6 +263,11 @@ function showContent($data) {
            
        case 'thanks':
             showContactThanks ($data);
+            break;
+
+       case 'orderconformation':
+            require_once('order_conformation.php');
+            showOrderConformation ($data);
             break;
            
        default: 

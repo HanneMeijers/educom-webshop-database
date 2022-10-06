@@ -31,7 +31,7 @@ function showWebshopProduct($product) {
     echo '<a href="index.php?page=detail&id=' . $product['id'] .'">';
     echo '<div class="center"><img src="Images/' . $product['img_url'] .'" alt="' . $product['name'] . '" height="200px" ></div>' ;
     echo '<div class="center">Naam: ' . $product['name'] . '</div>';
-    echo '<div class="center">Prijs: ' . $product['price_per_one'] . '</div>';
+    echo '<div class="center">Prijs: &euro; ' . number_format ($product['price_per_one'], 2,',','.') . '</div>';
     echo '</a>';
     showActionForm("addtocart", "Toevoegen", $product [ 'id' ]);
     echo '</div>';

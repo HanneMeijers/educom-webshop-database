@@ -110,8 +110,9 @@ function storeOrder ($userId, $shoppingCartRows) {
     try {
         // insert met invoice number 2022000000
         $invoiceNumber = date("Y")."000000";
-        $sql = "INSERT INTO invoice (invoice_number, user_id, `date`
-                             VALUES ($invoiceNumber, $userId, CURDATE())";
+        $sql = "INSERT INTO invoice (invoice_number, user_id, `date`)
+                             VALUES ($invoiceNumber, $userId, CURRENT_DATE())";
+        var_dump($sql);
         $result = mysqli_query($conn, $sql);
         checkResult($conn, $result, $sql);
         $invoiceId = mysqli_insert_id($conn);
@@ -128,14 +129,26 @@ function storeOrder ($userId, $shoppingCartRows) {
         checkResult($conn, $result, $sql);
         
         foreach ($shoppingCartRows as $shoppingCartRow) {
-           $sql = "INSERT INTO invoice_line (product_id, invoice_id, sale_price) 
-                        VALUES ('".$shoppingCartRow['product_id']."','".$invoiceId."', '".$shoppingCartRow['price_per_one']."')";
+           $sql = "INSERT INTO invoice_line (product_id, invoice_id, quantity, sale_price) 
+                        VALUES (".$shoppingCartRow['productid'].",".$invoiceId.", ".$shoppingCartRow['quantity'].", '".$shoppingCartRow['price_per_one']."')";
             $result = mysqli_query($conn, $sql);
             checkResult($conn, $result, $sql);
         }
-}
-
-finally {
-    closeDatabase($conn);
-}
+        $invoiceArray = null;
+        $sql = "SELECT invoice.invoice_number, users.email 
+                FROM invoice
+                JOIN users ON users.id = invoice.user_id
+                WHERE invoice.id = $invoiceId"; 
+        $result = mysqli_query($conn, $sql);
+        checkResult($conn, $result, $sql);
+    
+        if (mysqli_num_rows($result) > 0) {
+            // output data of each row
+            $invoiceArray = mysqli_fetch_assoc($result);
+        } 
+        return $invoiceArray;
+    }
+    finally {
+        closeDatabase($conn);
+    }
 }

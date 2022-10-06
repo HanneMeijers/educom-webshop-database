@@ -1,5 +1,6 @@
 <?php
 session_start();
+var_dump($_SESSION);
 
 function dologinUser($name, $userId) {
     $_SESSION['loggedInName'] = $name;
@@ -46,4 +47,8 @@ function removeProductFromShoppingCart($productid) {
     if (array_key_exists($productid, $_SESSION['shoppingCart'])) {
         unset($_SESSION['shoppingCart'][$productid]);
     }
+}
+
+function emptyShoppingCart () {
+    $_SESSION['shoppingCart'] = array ();
 }
